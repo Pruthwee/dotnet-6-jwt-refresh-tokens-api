@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
     var env = builder.Environment;
  
     services.AddDbContext<DataContext>();
+    services.AddHealthChecks();
     services.AddCors();
     services.AddControllers()
         .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
@@ -56,7 +57,8 @@ using (var scope = app.Services.CreateScope())
     // custom jwt auth middleware
     app.UseMiddleware<JwtMiddleware>();
 
+    app.MapHealthChecks("/health");
     app.MapControllers();
 }
 
-app.Run("http://localhost:4000");
+app.Run();

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-jwt-mcont2-1929
+  namespace: dotnet-jwt-mcont2-1929
+  labels:
+    app: dotnet-jwt-mcont2-1929
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dotnet-jwt-mcont2-1929
+  template:
+    metadata:
+      labels:
+        app: dotnet-jwt-mcont2-1929
+    spec:
+      containers:
+        - name: dotnet-jwt-mcont2-1929
+          image: "{{IMAGE_URI}}"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: TZ
+              value: "UTC"
+            - name: AppSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: dotnet-jwt-mcont2-1929-secrets
+                  key: appsettings-secret
+            - name: AppSettings__RefreshTokenTTL
+              value: "2"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3

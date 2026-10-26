@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  dotnet-jwt-mcont2-1929:
+    image: dotnet-jwt-mcont2-1929:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=UTC
+      - AppSettings__Secret=${AppSettings__Secret:?set AppSettings__Secret}
+      - AppSettings__RefreshTokenTTL=2
+    volumes:
+      - dotnet-jwt-mcont2-1929-logs:/app/logs
+      - ./appsettings.json:/app/appsettings.json:ro
+
+volumes:
+  dotnet-jwt-mcont2-1929-logs:

@@ -1,0 +1,15 @@
+bin/
+obj/
+.git/
+*.md
+.vs/
+.vscode/
+*.user
+*.suo
+.DS_Store
+launchSettings.json
+Dockerfile
+docker-compose.yml
+kubernetes/
+scripts/
+docs/
